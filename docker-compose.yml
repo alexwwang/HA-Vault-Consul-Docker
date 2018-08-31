@@ -1,0 +1,152 @@
+version: '3.7'
+
+services:
+  consul_s1:
+    container_name: consul.server1
+    image: consul:latest
+    command: ["agent", "-config-file=/consul/config/server_agent.json"]
+    volumes:
+      - ./consul/config/server1:/consul/config
+      - ./consul/data/data_s1:/consul/data
+    restart: unless-stopped
+    ports:
+      - "8090:8080"
+      - "8300:8300"
+      - "8500:8500"
+      - "8600:8600/udp"
+    networks:
+      internal_net:
+        ipv4_address: 172.16.238.53
+
+  consul_s2:
+    container_name: consul.server2
+    image: consul:latest
+    command: ["agent", "-config-file=/consul/config/server_agent.json"]
+    volumes:
+      - ./consul/config/server2:/consul/config
+      - ./consul/data/data_s2:/consul/data
+    restart: unless-stopped
+    ports:
+      - "8091:8080"
+      - "8310:8300"
+      - "8510:8500"
+      - "8610:8600/udp"
+    networks:
+      internal_net:
+        ipv4_address: 172.16.238.54
+
+  consul_s3:
+    container_name: consul.server3
+    image: consul:latest
+    command: ["agent", "-config-file=/consul/config/server_agent.json"]
+    volumes:
+      - ./consul/config/server3:/consul/config
+      - ./consul/data/data_s3:/consul/data
+    restart: unless-stopped
+    ports:
+      - "8092:8080"
+      - "8320:8300"
+      - "8520:8500"
+      - "8620:8600/udp"
+    networks:
+      internal_net:
+        ipv4_address: 172.16.238.55
+
+  consul_c1:
+    container_name: consul.client1
+    image: consul:latest
+    command: ["agent", "-config-file=/consul/config/client_agent.json"]
+    volumes:
+      - ./consul/config/client1:/consul/config
+      - ./consul/data/data_c1:/consul/data
+    restart: unless-stopped
+    ports:
+      - "8093:8080"
+      - "8330:8300"
+      - "8530:8500"
+      - "8630:8600/udp"
+    depends_on:
+      - consul_s1
+    networks:
+      internal_net:
+        ipv4_address: 172.16.238.201
+        aliases:
+          - consul-c1
+
+  consul_c2:
+    container_name: consul.client2
+    image: consul:latest
+    command: ["agent", "-config-file=/consul/config/client_agent.json"]
+    volumes:
+      - ./consul/config/client2:/consul/config
+      - ./consul/data/data_c2:/consul/data
+    restart: unless-stopped
+    ports:
+      - "8094:8080"
+      - "8340:8300"
+      - "8540:8500"
+      - "8640:8600/udp"
+    depends_on:
+      - consul_s2
+    networks:
+      internal_net:
+        ipv4_address: 172.16.238.202
+        aliases:
+          - consul-c2
+
+  vault_s1:
+    container_name: vault.server1
+    image: vault:latest
+    ports:
+      - "9200:8200"
+    expose:
+      - "8500"
+    volumes:
+      - ./vault/config/server1:/vault/config
+      - ./vault/logs_s1:/vault/logs
+    cap_add:
+      - IPC_LOCK
+    command: ["server", "-log-level=info"]
+    environment:
+      - VAULT_LOCAL_CONFIG={"ui":"true", "backend":{"consul":{"address":"consul-c1:8500", "path":"vault", "scheme":"http", "tls_ca_file":"/vault/config/tls/certs/root.pem", "tls_cert_file":"/vault/config/tls/certs/server.pem", "tls_key_file":"/vault/config/tls/private/server-key.pem", "tls_skip_verify":0}}, "listener":{"tcp":{"address":"0.0.0.0:8200", "cluster_address":"0.0.0.0:8201", "tls_disable":0, "tls_cert_file":"/vault/config/tls/certs/server.pem", "tls_key_file":"/vault/config/tls/private/server-key.pem", "tls_min_version":"tls12"}}, "api_addr":"https://s1.vault:8200", "cluster_addr":"https://s1.vault:8201"}
+    depends_on:
+      - consul_c1
+    networks:
+      internal_net:
+        ipv4_address: 172.16.238.151
+        aliases:
+          - s1.vault
+
+  vault_s2:
+    container_name: vault.server2
+    image: vault:latest
+    ports:
+      - "9210:9200"
+    expose:
+      - "8500"
+    volumes:
+      - ./vault/config/server2:/vault/config
+      - ./vault/logs_s2:/vault/logs
+    cap_add:
+      - IPC_LOCK
+    command: ["server", "-log-level=info"]
+    environment:
+      - VAULT_LOCAL_CONFIG={"backend":{"consul":{"address":"consul-c2:8500", "path":"vault", "scheme":"http", "tls_ca_file":"/vault/config/tls/certs/root.pem", "tls_cert_file":"/vault/config/tls/certs/server.pem", "tls_key_file":"/vault/config/tls/private/server-key.pem", "tls_skip_verify":0}}, "listener":{"tcp":{"address":"0.0.0.0:8200", "cluster_address":"0.0.0.0:8201", "tls_disable":0, "tls_cert_file":"/vault/config/tls/certs/server.pem", "tls_key_file":"/vault/config/tls/private/server-key.pem", "tls_min_version":"tls12"}}, "api_addr":"https://s2.vault:8200", "cluster_addr":"https://s2.vault:8201"}
+    depends_on:
+      - consul_c2
+    networks:
+      internal_net:
+        ipv4_address: 172.16.238.152
+        aliases:
+          - s2.vault
+
+
+
+
+networks:
+  internal_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24
