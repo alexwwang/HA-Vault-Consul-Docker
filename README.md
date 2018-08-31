@@ -1,4 +1,4 @@
-###Introduction###
+**Introduction**
 
 This project is aiming to build a docker composed Vault service with HA enabled backed by Consul storage.
 
@@ -13,7 +13,7 @@ The base docker images are from hashicorp official but rebuild locally.
 The detailed reason of this could be refered issue and pr in these two project.
 
 
-###Usage###
+**Usage**
 
 Before launch, generate TLS certs and keys for consul servers, clients and vault servers 
 with the same root key and put them according to the location in `docker-compose.yml`
@@ -25,7 +25,7 @@ Then you can access the vault ui in browser with `https://$HOST_IP:9200/ui`
 while the vault api with `https://$HOST_IP:9200`.
 
 
-###Something to Improve###
+**Something to Improve**
 
 The connection between consul client and vault service is still unsecure.
 
