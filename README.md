@@ -27,8 +27,9 @@ while the vault api with `https://$HOST_IP:9200`.
 
 **Something to Improve**
 
-The connection between consul client and vault service is still unsecure.
+<del>The connection between consul client and vault service is still unsecure.
 
 The tls connection failed, detailed in this issue:
-https://github.com/hashicorp/docker-vault/issues/110
+https://github.com/hashicorp/docker-vault/issues/110</del>
 
+Gossip communication among consul neeeds to be set encrypted.
