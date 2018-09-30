@@ -27,6 +27,20 @@ Then you can access the vault ui in browser with `http://$HOST_IP:9200/ui`
 while the vault api with `http://$HOST_IP:9200`. A standby vault server is also
 availabel on `http://$HOST_IP:9210`.
 
+***WARNING***
+Don't forget to modify the config json file under `consul/config/` dir, 
+to change the `encrypt` key's value, which should be the same among all servers and clients config
+files.
+
+As this document[c] said, you should generate a 16 bytes Base 64 encoded string as the key.
+
+If you use Python, the code below may be helpful:
+```
+import os
+import base64
+key = base64.b64encode(os.urandom(16)).decode('utf-8')
+print(key)
+```
 
 **Something to Improve**
 
