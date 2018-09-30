@@ -52,3 +52,6 @@ print(key)
 <del>+ Gossip communication among consul neeeds to be set encrypted.</del>
 
 + add a reverse proxy layer to handle vault server with https+let tls cert by nginx.
+
+
+[c] https://www.consul.io/docs/agent/encryption.html
