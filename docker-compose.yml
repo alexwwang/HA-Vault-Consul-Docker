@@ -108,8 +108,8 @@ services:
       - IPC_LOCK
     command: ["server", "-log-level=info"]
     environment:
-      - VAULT_LOCAL_CONFIG={"ui":"true", "backend":{"consul":{"address":"consul-c1:8080", "path":"vault", "scheme":"https", "tls_ca_file":"/vault/config/consul_tls/certs/root.pem", "tls_cert_file":"/vault/config/consul_tls/certs/client.pem", "tls_key_file":"/vault/config/consul_tls/private/client-key.pem", "tls_skip_verify":0}}, "listener":{"tcp":{"address":"0.0.0.0:8200", "cluster_address":"0.0.0.0:8201", "tls_disable":0, "tls_cert_file":"/vault/config/tls/certs/server.pem", "tls_key_file":"/vault/config/tls/private/server-key.pem", "tls_min_version":"tls12"}}, "api_addr":"https://s1.vault:8200", "cluster_addr":"https://s1.vault:8201"}
-      - VAULT_SKIP_VERIFY=true
+      - VAULT_LOCAL_CONFIG={"ui":"true", "backend":{"consul":{"address":"consul-c1:8080", "path":"vault", "scheme":"https", "tls_ca_file":"/vault/config/consul_tls/certs/root.pem", "tls_cert_file":"/vault/config/consul_tls/certs/client.pem", "tls_key_file":"/vault/config/consul_tls/private/client-key.pem", "tls_skip_verify":0}}, "listener":{"tcp":{"address":"0.0.0.0:8200", "cluster_address":"0.0.0.0:8201", "tls_disable":1, "tls_cert_file":"/vault/config/tls/certs/server.pem", "tls_key_file":"/vault/config/tls/private/server-key.pem", "tls_min_version":"tls12"}}, "api_addr":"http://s1.vault:8200", "cluster_addr":"https://s1.vault:8201"}
+      - VAULT_SKIP_VERIFY=false
     depends_on:
       - consul_c1
     networks:
@@ -133,8 +133,8 @@ services:
       - IPC_LOCK
     command: ["server", "-log-level=info"]
     environment:
-      - VAULT_LOCAL_CONFIG={"ui":"true", "backend":{"consul":{"address":"consul-c2:8080", "path":"vault", "scheme":"https", "tls_ca_file":"/vault/config/consul_tls/certs/root.pem", "tls_cert_file":"/vault/config/consul_tls/certs/client.pem", "tls_key_file":"/vault/config/consul_tls/private/client-key.pem", "tls_skip_verify":0}}, "listener":{"tcp":{"address":"0.0.0.0:8200", "cluster_address":"0.0.0.0:8201", "tls_disable":0, "tls_cert_file":"/vault/config/tls/certs/server.pem", "tls_key_file":"/vault/config/tls/private/server-key.pem", "tls_min_version":"tls12"}}, "api_addr":"https://s2.vault:8200", "cluster_addr":"https://s2.vault:8201"}
-      - VAULT_SKIP_VERIFY=true
+      - VAULT_LOCAL_CONFIG={"ui":"true", "backend":{"consul":{"address":"consul-c2:8080", "path":"vault", "scheme":"https", "tls_ca_file":"/vault/config/consul_tls/certs/root.pem", "tls_cert_file":"/vault/config/consul_tls/certs/client.pem", "tls_key_file":"/vault/config/consul_tls/private/client-key.pem", "tls_skip_verify":0}}, "listener":{"tcp":{"address":"0.0.0.0:8200", "cluster_address":"0.0.0.0:8201", "tls_disable":1, "tls_cert_file":"/vault/config/tls/certs/server.pem", "tls_key_file":"/vault/config/tls/private/server-key.pem", "tls_min_version":"tls12"}}, "api_addr":"http://s2.vault:8200", "cluster_addr":"https://s2.vault:8201"}
+      - VAULT_SKIP_VERIFY=false
     depends_on:
       - consul_c2
     networks:

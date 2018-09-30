@@ -16,5 +16,6 @@
   "key_file": "/consul/config/private/client-key.pem",
   "cert_file": "/consul/config/certs/client.pem",
   "verify_incoming":true,
-  "verify_outgoing":true
+  "verify_outgoing":true,
+  "encrypt": "etvmG5IxGhiLgfSP9p/jEQ=="
 }
